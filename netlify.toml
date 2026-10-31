@@ -1,0 +1,17 @@
+# Netlify lee este archivo solo: no hace falta escribir nada en «Build settings».
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# El service worker y el manifiesto siempre se piden de nuevo, para que las actualizaciones lleguen.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Cache-Control = "no-cache"

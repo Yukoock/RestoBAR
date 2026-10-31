@@ -1,0 +1,96 @@
+/* ResTO BAR · identidad «cruceño contemporáneo» (Fase 1): el monte manda, el urucú vende.
+   Tokens de B1 en claro y oscuro. La cocina usa siempre la variante oscura (clase .tema-oscuro). */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg:#FAF8F4; --surface:#FFFFFF; --surface-2:#F3F2EC; --surface-3:#E9E7DF;
+    --ink:#10241B; --ink-2:#3E4A43; --ink-3:#5B6159; --line:#E2DDD3; --focus:#A63E14;
+    --brand:#12402F; --brand-deep:#0B2E21; --brand-text:#12402F; --brand-soft:#E3EDE7; --on-brand:#FFFFFF;
+    --accent:#C94F1E; --accent-deep:#A63E14; --on-accent:#FFFFFF;
+    --maiz:#F2B33D; --maiz-soft:#FDF0D3; --on-maiz:#12402F; --toborochi:#D9467F;
+    --ok:#1B7A44; --ok-soft:#E1F3E8; --warn:#9A6210; --warn-soft:#FCF0D9;
+    --bad:#B42318; --bad-soft:#FBE3E0; --info:#2F6FB0; --info-soft:#E2ECF7;
+    --grid:#ECE8E0; --axis:#8A8F86; --series-1:#12402F; --series-2:#C94F1E; --series-3:#F2B33D; --series-4:#D9467F;
+    --r-admin:#12402F; --r-cajero:#4A7A12; --r-cocina:#B5441A; --r-mesero:#3B55A0;
+    --r-tienda:#B8336A; --r-delivery:#0E6670; --r-cliente:#8A5A0B; --on-role:#FFFFFF;
+    --radius-sm:6px; --radius-md:12px; --radius-lg:20px;
+    --shadow-1:0 0 0 1px var(--line), 0 1px 2px rgba(16,36,27,.06);
+    --shadow-2:0 18px 40px -12px rgba(16,36,27,.28), 0 0 0 1px var(--line);
+    --scrim:rgba(10,20,15,.45); --lado:#12402F;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg:#0C1612; --surface:#13211B; --surface-2:#182A22; --surface-3:#20352B;
+    --ink:#EEF3EF; --ink-2:#C5D3CB; --ink-3:#9DB1A7; --line:#22362C; --focus:#F07A45;
+    --brand:#4FB389; --brand-deep:#3A9671; --brand-text:#67C49D; --brand-soft:#173328; --on-brand:#06140E;
+    --accent:#F07A45; --accent-deep:#F07A45; --on-accent:#1A0A03;
+    --maiz:#F5C15A; --maiz-soft:#3A2E12; --on-maiz:#1A1405; --toborochi:#EC79A6;
+    --ok:#4CC384; --ok-soft:#123323; --warn:#E9A23B; --warn-soft:#3A2A10;
+    --bad:#F0705A; --bad-soft:#3D1A13; --info:#6EA8E6; --info-soft:#14273C;
+    --grid:#1C2E25; --axis:#7E9488; --series-1:#4FB389; --series-2:#F07A45; --series-3:#F5C15A; --series-4:#EC79A6;
+    --r-admin:#4FB389; --r-cajero:#8CC63F; --r-cocina:#F07A45; --r-mesero:#8FA3E8;
+    --r-tienda:#EC79A6; --r-delivery:#5EC2C9; --r-cliente:#F5C15A; --on-role:#06140E;
+    --shadow-1:0 0 0 1px var(--line); --shadow-2:0 18px 40px -12px rgba(0,0,0,.6), 0 0 0 1px var(--line);
+    --scrim:rgba(0,0,0,.6); --lado:#081510; color-scheme:dark;
+  } }
+  :root[data-theme="dark"], .tema-oscuro {
+    --bg:#0C1612; --surface:#13211B; --surface-2:#182A22; --surface-3:#20352B;
+    --ink:#EEF3EF; --ink-2:#C5D3CB; --ink-3:#9DB1A7; --line:#22362C; --focus:#F07A45;
+    --brand:#4FB389; --brand-deep:#3A9671; --brand-text:#67C49D; --brand-soft:#173328; --on-brand:#06140E;
+    --accent:#F07A45; --accent-deep:#F07A45; --on-accent:#1A0A03;
+    --maiz:#F5C15A; --maiz-soft:#3A2E12; --on-maiz:#1A1405; --toborochi:#EC79A6;
+    --ok:#4CC384; --ok-soft:#123323; --warn:#E9A23B; --warn-soft:#3A2A10;
+    --bad:#F0705A; --bad-soft:#3D1A13; --info:#6EA8E6; --info-soft:#14273C;
+    --grid:#1C2E25; --axis:#7E9488; --series-1:#4FB389; --series-2:#F07A45; --series-3:#F5C15A; --series-4:#EC79A6;
+    --r-admin:#4FB389; --r-cajero:#8CC63F; --r-cocina:#F07A45; --r-mesero:#8FA3E8;
+    --r-tienda:#EC79A6; --r-delivery:#5EC2C9; --r-cliente:#F5C15A; --on-role:#06140E;
+    --shadow-1:0 0 0 1px var(--line); --shadow-2:0 18px 40px -12px rgba(0,0,0,.6), 0 0 0 1px var(--line);
+    --scrim:rgba(0,0,0,.6); --lado:#081510; color-scheme:dark;
+  }
+  html, body { background:var(--bg) }
+  body { @apply font-sans text-base text-ink antialiased; margin:0 }
+  h1, h2, h3 { @apply font-display; letter-spacing:-.01em; text-wrap:balance }
+  :focus-visible { outline:3px solid var(--focus); outline-offset:2px }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="color"]), select, textarea {
+    @apply w-full rounded-sm border border-line bg-surface px-3 text-ink; min-height:44px;
+  }
+  textarea { @apply py-2; min-height:88px }
+  input[type="checkbox"] { width:20px; height:20px; accent-color:var(--brand) }
+  .num { font-variant-numeric:tabular-nums }
+}
+
+@layer components {
+  /* Elemento firma: repulgue trenzado (la costura torcida de la salteña) */
+  .trenza { height:10px; background:var(--accent);
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cellipse cx='6' cy='5' rx='2.1' ry='4.3' transform='rotate(35 6 5)'/%3E%3C/svg%3E") repeat-x 0 0/12px 10px;
+            mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cellipse cx='6' cy='5' rx='2.1' ry='4.3' transform='rotate(35 6 5)'/%3E%3C/svg%3E") repeat-x 0 0/12px 10px; }
+  .skel { background:linear-gradient(90deg, var(--surface-2), var(--surface-3), var(--surface-2)); background-size:200% 100%; animation:brillo 1.2s infinite }
+  .tip { position:relative }
+  @media (hover:hover) {
+    .tip:hover::after, .tip:focus-visible::after { content:attr(data-tip); position:absolute; left:50%; top:calc(100% + 6px); transform:translateX(-50%);
+      background:var(--ink); color:var(--bg); font:600 12px/1.3 "Hanken Grotesk", sans-serif; padding:5px 8px; border-radius:6px; white-space:nowrap; z-index:60; pointer-events:none }
+  }
+  .rol-suave { background:color-mix(in srgb, var(--c) 13%, var(--surface)); color:var(--c) }
+  .ilus { position:relative; overflow:hidden; aspect-ratio:4 / 3; background:var(--surface-2); max-width:100% }
+  .ilus.cuadrada { aspect-ratio:1 }
+  .ilus svg, .ilus img { display:block; width:100%; height:100% }
+  .ilus img { position:absolute; inset:0; object-fit:cover }
+  .ilus img.contain { object-fit:contain; background:var(--surface) }
+  .ilus.gris { filter:grayscale(1) opacity(.6) }
+  .sin-barra { scrollbar-width:none } .sin-barra::-webkit-scrollbar { display:none }
+}
+
+@keyframes brillo { to { background-position:-200% 0 } }
+@keyframes aparece { from { opacity:0 } }
+@keyframes entra { from { transform:translateX(40px); opacity:0 } }
+@keyframes sube { from { transform:translateY(40px); opacity:0 } }
+@keyframes giro { to { transform:rotate(360deg) } }
+.anim-aparece { animation:aparece .15s }
+.anim-entra { animation:entra .2s ease-out }
+.anim-sube { animation:sube .2s ease-out }
+.anim-giro { animation:giro .7s linear infinite }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important } }
