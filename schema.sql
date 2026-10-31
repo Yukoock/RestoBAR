@@ -1230,6 +1230,142 @@ begin
 end $$;
 
 -- ---------------------------------------------------------------------
+-- 6b. CRM · Clientes, puntos y premios
+--     Cada pedido con teléfono se une solo a la ficha de su cliente (se crea si no existe).
+--     Los puntos salen de lo pagado: 1 punto por cada «crm_bs_por_punto» del subtotal.
+-- ---------------------------------------------------------------------
+alter table public.negocio_config add column if not exists crm_bs_por_punto numeric(10, 2) not null default 10 check (crm_bs_por_punto > 0);
+alter table public.negocio_config add column if not exists crm_puntos_premio integer not null default 100 check (crm_puntos_premio > 0);
+alter table public.negocio_config add column if not exists crm_premio text not null default 'Un plato fuerte gratis';
+alter table public.negocio_config add column if not exists crm_dias_riesgo smallint not null default 30 check (crm_dias_riesgo between 7 and 365);
+
+create table if not exists public.clientes (
+  id uuid primary key default gen_random_uuid(),
+  nombre text not null,
+  telefono text unique check (telefono ~ '^[0-9]{8,15}$'),   -- con código de país: 59170000000
+  correo text,
+  cumpleanos date,
+  notas text,
+  etiquetas text[] not null default '{}',
+  acepta_promos boolean not null default true,
+  puntos_canjeados integer not null default 0 check (puntos_canjeados >= 0),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.pedidos add column if not exists cliente_id uuid references public.clientes (id) on delete set null;
+create index if not exists pedidos_cliente_idx on public.pedidos (cliente_id);
+
+create table if not exists public.canjes (
+  id uuid primary key default gen_random_uuid(),
+  cliente_id uuid not null references public.clientes (id) on delete cascade,
+  puntos integer not null check (puntos > 0),
+  premio text not null,
+  creado_por uuid references public.perfiles (id) on delete set null,
+  created_at timestamptz not null default now()
+);
+create index if not exists canjes_cliente_idx on public.canjes (cliente_id);
+create index if not exists canjes_creado_por_idx on public.canjes (creado_por);
+
+drop trigger if exists tocar_updated_at on public.clientes;
+create trigger tocar_updated_at before update on public.clientes for each row execute function privado.tocar_updated_at();
+
+-- Teléfono en un solo formato: solo números y con 591 delante si tiene 8 dígitos
+create or replace function privado.normalizar_tel(p text)
+returns text language sql immutable set search_path = '' as $$
+  select case
+    when length(regexp_replace(coalesce(p, ''), '[^0-9]', '', 'g')) = 8 then '591' || regexp_replace(p, '[^0-9]', '', 'g')
+    when length(regexp_replace(coalesce(p, ''), '[^0-9]', '', 'g')) between 9 and 15 then regexp_replace(p, '[^0-9]', '', 'g')
+  end;
+$$;
+
+-- Pedido con teléfono → su cliente (lo crea la primera vez y le pone nombre si aún no tenía)
+create or replace function privado.vincular_cliente()
+returns trigger language plpgsql security definer set search_path = '' as $$
+declare
+  v_tel text := privado.normalizar_tel(new.telefono);
+  v_nombre text := nullif(trim(coalesce(new.cliente, '')), '');
+  v_id uuid;
+begin
+  if v_tel is null then return new; end if;
+  insert into public.clientes as c (nombre, telefono) values (coalesce(v_nombre, 'Cliente ' || right(v_tel, 4)), v_tel)
+  on conflict (telefono) do update
+    set nombre = case when c.nombre like 'Cliente %' and v_nombre is not null then v_nombre else c.nombre end
+  returning c.id into v_id;
+  new.cliente_id := v_id;
+  return new;
+end; $$;
+drop trigger if exists vincular_cliente on public.pedidos;
+create trigger vincular_cliente before insert or update of telefono, cliente on public.pedidos
+  for each row execute function privado.vincular_cliente();
+revoke execute on function privado.vincular_cliente() from public, anon, authenticated;
+
+-- Resumen de cada cliente para la pantalla Clientes (respeta la seguridad de quien la mira)
+create or replace view public.clientes_resumen with (security_invoker = true) as
+select c.*,
+  count(p.id) filter (where p.pagado)::int as visitas,
+  coalesce(sum(p.total) filter (where p.pagado), 0)::numeric(12, 2) as total_gastado,
+  min(p.created_at) filter (where p.pagado) as primera_visita,
+  max(p.created_at) filter (where p.pagado) as ultima_visita,
+  (coalesce(sum(floor(p.subtotal / cfg.crm_bs_por_punto)) filter (where p.pagado), 0) - c.puntos_canjeados)::int as puntos
+from public.clientes c
+cross join (select crm_bs_por_punto from public.negocio_config where id = 1) cfg
+left join lateral (
+  select x.id, x.total, x.subtotal, x.created_at,
+         (x.pago_metodo is not null and not x.pago_pendiente and x.estado <> 'anulado') as pagado
+  from public.pedidos x where x.cliente_id = c.id
+) p on true
+group by c.id, cfg.crm_bs_por_punto;
+revoke all on public.clientes_resumen from anon;
+grant select on public.clientes_resumen to authenticated;
+
+-- Canjear el premio: descuenta los puntos y deja constancia
+create or replace function public.canjear_puntos(p_cliente uuid)
+returns integer
+language plpgsql security definer
+set search_path = ''
+as $$
+declare
+  v_premio text; v_necesarios integer; v_tiene integer; v_nombre text;
+begin
+  if not privado.tiene_rol(array['dueno', 'cajero']) then raise exception 'Solo el Dueño o la caja canjean premios'; end if;
+  select nombre into v_nombre from public.clientes where id = p_cliente for update;
+  if v_nombre is null then raise exception 'Ese cliente no existe'; end if;
+  select crm_premio, crm_puntos_premio into v_premio, v_necesarios from public.negocio_config where id = 1;
+  select puntos into v_tiene from public.clientes_resumen where id = p_cliente;
+  if v_tiene < v_necesarios then raise exception 'Le faltan % puntos para el premio', v_necesarios - v_tiene; end if;
+  update public.clientes set puntos_canjeados = puntos_canjeados + v_necesarios where id = p_cliente;
+  insert into public.canjes (cliente_id, puntos, premio, creado_por) values (p_cliente, v_necesarios, v_premio, (select auth.uid()));
+  perform privado.auditar('Canjeó «' || v_premio || '» para ' || v_nombre, 'clientes', p_cliente, jsonb_build_object('puntos', v_necesarios));
+  return v_tiene - v_necesarios;
+end; $$;
+revoke execute on function public.canjear_puntos(uuid) from public, anon;
+grant execute on function public.canjear_puntos(uuid) to authenticated;
+
+alter table public.clientes enable row level security;
+alter table public.canjes enable row level security;
+drop policy if exists rb_clientes_leer on public.clientes;
+drop policy if exists rb_clientes_crear on public.clientes;
+drop policy if exists rb_clientes_cambiar on public.clientes;
+drop policy if exists rb_clientes_borrar on public.clientes;
+drop policy if exists rb_canjes_leer on public.canjes;
+create policy rb_clientes_leer on public.clientes for select to authenticated using ((select privado.tiene_rol(array['dueno', 'cajero'])));
+create policy rb_clientes_crear on public.clientes for insert to authenticated with check ((select privado.tiene_rol(array['dueno', 'cajero'])));
+create policy rb_clientes_cambiar on public.clientes for update to authenticated
+  using ((select privado.tiene_rol(array['dueno', 'cajero']))) with check ((select privado.tiene_rol(array['dueno', 'cajero'])));
+create policy rb_clientes_borrar on public.clientes for delete to authenticated using ((select privado.tiene_rol(array['dueno'])));
+create policy rb_canjes_leer on public.canjes for select to authenticated using ((select privado.tiene_rol(array['dueno', 'cajero'])));
+
+do $$ begin
+  if not exists (select 1 from pg_publication_tables where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'clientes') then
+    alter publication supabase_realtime add table public.clientes;
+  end if;
+end $$;
+
+-- Pedidos anteriores con teléfono: se unen a su cliente (solo los que faltan)
+update public.pedidos set telefono = telefono
+ where cliente_id is null and privado.normalizar_tel(telefono) is not null;
+
+-- ---------------------------------------------------------------------
 -- 7. Storage: buckets con su nombre exacto y quién puede subir
 -- ---------------------------------------------------------------------
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types) values
@@ -1532,4 +1668,4 @@ from (values
 join public.productos p on p.codigo = v.codigo
 on conflict (fecha, producto_id) do nothing;
 
--- Listo. Siguiente paso: abre la app y crea la cuenta del dueño.
+-- Listo. Siguiente paso (solo la primera vez): crea tu usuario y ejecuta hacer-administrador.sql.

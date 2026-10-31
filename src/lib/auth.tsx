@@ -4,10 +4,10 @@ import { supabase, faltaConexion } from "./supabase";
 import type { Perfil, Rol } from "./tipos";
 
 // Pantallas que se pueden dar o quitar a cada rol (tabla permisos_rol). El Dueño siempre tiene todo.
-export type PermisoAdmin = "Mesas" | "Cierre de caja" | "Reportes";
+export type PermisoAdmin = "Mesas" | "Cierre de caja" | "Reportes" | "Clientes";
 export type Pantalla = "Cajero" | "Cocina" | "Mesero" | "Delivery" | PermisoAdmin | "Usuarios y ajustes" | "Administración";
 /** Permisos que abren Administración a un rol (cada uno con sus pantallas) */
-export const PERMISOS_ADMIN: PermisoAdmin[] = ["Mesas", "Cierre de caja", "Reportes"];
+export const PERMISOS_ADMIN: PermisoAdmin[] = ["Mesas", "Cierre de caja", "Reportes", "Clientes"];
 
 interface Auth {
   cargando: boolean;

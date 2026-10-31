@@ -170,6 +170,20 @@ Las variables se «meten» en la web al momento de armarla, así que con esta op
    - En la pestaña **Seguridad**, cambia el **PIN de anulación**. Viene como `1234`.
 6. **Comparte tu tienda:** `https://tu-sitio.netlify.app/tienda`
 
+### Clientes (CRM)
+
+En **Administración › Clientes** está la lista de tus clientes. Se arma **sola**: cada pedido que lleva teléfono (tienda online, delivery o caja) se une a la ficha de ese cliente, y si no existía, la crea.
+
+- **Ficha de cada cliente:** visitas, total gastado, ticket promedio, última visita, lo que más pide, historial de pedidos, cumpleaños, etiquetas y notas.
+- **Grupos:** Frecuentes, Nuevos, Dejaron de venir, Cumpleaños del mes y Con premio listo.
+- **Puntos:** el cliente gana 1 punto por cada Bs 10 que consume. Con 100 puntos gana el premio (de fábrica, «Un plato fuerte gratis»). Desde su ficha, el premio se entrega con **Canjear premio**.
+  - El Dueño cambia estos números y el premio en **Programa de puntos**.
+- **Enviar promoción:** eliges un grupo, escribes el mensaje y presionas **Enviar** en cada cliente. Se abre WhatsApp con el mensaje listo y con su nombre.
+  - Solo aparecen los clientes que aceptan recibir promociones.
+- **Quién lo ve:** el Dueño, y el Cajero si se lo das en **Usuarios y roles › Permisos por rol › Clientes y puntos**.
+
+> Si ya tenías el sistema funcionando, **vuelve a ejecutar `schema.sql`** en Supabase para activar Clientes. No borra nada, y une solos los pedidos anteriores que tenían teléfono.
+
 ### Direcciones de cada módulo
 
 | Dirección | Quién la usa | Pantalla |
@@ -195,6 +209,7 @@ Las variables se «meten» en la web al momento de armarla, así que con esta op
 | «El correo o la contraseña no coinciden» con tu usuario | Revisa que el correo de `hacer-administrador.sql` sea igual al del Paso 3. Después vuelve a ejecutarlo. |
 | «La base de datos todavía no está lista» | Falta el Paso 2. |
 | Los pedidos no aparecen solos en Cocina | Vuelve a ejecutar `schema.sql`. Así se activa el tiempo real. |
+| En Clientes sale un error o la lista no carga | Vuelve a ejecutar `schema.sql`: falta la parte nueva de Clientes. |
 | Un error que no entiendes | Cópialo tal cual y escribe en el chat del curso: `ERROR: …` |
 
 ---

@@ -20,7 +20,7 @@ const DESC: Record<Rol, string> = {
 // Casillas que el Dueño da o quita. Catálogo, inventario, compras, usuarios y configuración son solo del Dueño:
 // la base de datos tampoco deja que otro rol los cambie.
 const PANTALLAS: [string, string][] = [["Cajero", "Cajero"], ["Mesas", "Mesas (Administración)"], ["Cierre de caja", "Cierre de caja (Administración)"],
-  ["Reportes", "Dashboard, pedidos y reportes (Administración)"], ["Cocina", "Cocina"], ["Mesero", "Mesero"], ["Delivery", "Delivery"]];
+  ["Reportes", "Dashboard, pedidos y reportes (Administración)"], ["Clientes", "Clientes y puntos (Administración · solo Cajero)"], ["Cocina", "Cocina"], ["Mesero", "Mesero"], ["Delivery", "Delivery"]];
 const ROLES_EDIT: Rol[] = ["cajero", "cocina", "mesero", "repartidor"];
 
 export function Usuarios() {

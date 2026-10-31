@@ -39,6 +39,10 @@ export interface NegocioConfig {
   comision_qr: number;
   intentos_pin: number;
   qr_cobro_url: string | null;
+  crm_bs_por_punto: number;
+  crm_puntos_premio: number;
+  crm_premio: string;
+  crm_dias_riesgo: number;
 }
 
 export interface Categoria { id: string; nombre: string; orden: number; visible: boolean }
@@ -128,3 +132,24 @@ export interface CategoriaGasto { id: string; nombre: string }
 export interface Gasto { id: string; fecha: string; categoria_id: string | null; detalle: string; monto: number; creado_por: string | null; created_at: string }
 export interface Banner { id: string; titulo: string; subtitulo: string | null; foto_url: string | null; producto_id: string | null; donde: ("tienda" | "pantalla")[]; activo: boolean; orden: number }
 export interface MenuDelDia { id: string; fecha: string; producto_id: string; preparado: number; disponible: boolean }
+
+// CRM: ficha del cliente y su resumen (vista clientes_resumen)
+export interface Cliente {
+  id: string;
+  nombre: string;
+  telefono: string | null;
+  correo: string | null;
+  cumpleanos: string | null;
+  notas: string | null;
+  etiquetas: string[];
+  acepta_promos: boolean;
+  puntos_canjeados: number;
+  created_at: string;
+}
+export interface ClienteResumen extends Cliente {
+  visitas: number;
+  total_gastado: number;
+  primera_visita: string | null;
+  ultima_visita: string | null;
+  puntos: number;
+}

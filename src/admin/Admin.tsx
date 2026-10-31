@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState, type ComponentType } from "react";
 import { Link, NavLink, Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import {
-  AlertTriangle, BarChart3, Bell, Boxes, CalendarDays, ChefHat, ChevronDown, ChevronLeft, ChevronRight, CookingPot, FileText,
+  AlertTriangle, BarChart3, Bell, Boxes, CalendarDays, ChefHat, ChevronDown, ChevronLeft, ChevronRight, CookingPot, FileText, HeartHandshake,
   Image, LayoutDashboard, LayoutGrid, LogOut, Menu as MenuIco, QrCode, Receipt, Search, Settings, ShoppingBag, Tags, Truck, Users, UtensilsCrossed, Wallet, type LucideIcon,
 } from "lucide-react";
 import { useAuth, NOMBRE_ROL, type PermisoAdmin } from "@/lib/auth";
@@ -24,6 +24,7 @@ import { CobrosQR, Facturacion } from "./Finanzas";
 import { Reportes } from "./Reportes";
 import { Usuarios } from "./Usuarios";
 import { Configuracion } from "./Configuracion";
+import { Clientes } from "./Clientes";
 
 // permiso: qué casilla de «Permisos por rol» abre la pantalla a otros roles. Sin permiso, es solo del Dueño.
 interface Pantalla { ruta: string; nombre: string; icono: LucideIcon; sub: string; C: ComponentType; permiso?: PermisoAdmin }
@@ -33,6 +34,9 @@ export const GRUPOS: [string, Pantalla[]][] = [
     { ruta: "pedidos", nombre: "Pedidos", icono: Receipt, sub: "Todos los pedidos de todos los canales", C: Pedidos, permiso: "Reportes" },
     { ruta: "mesas", nombre: "Mesas", icono: LayoutGrid, sub: "Plano del salón y QR de cada mesa", C: Mesas, permiso: "Mesas" },
     { ruta: "caja", nombre: "Cierre de caja", icono: Wallet, sub: "Apertura, arqueo y cierre del turno", C: CierreCaja, permiso: "Cierre de caja" },
+  ]],
+  ["Clientes", [
+    { ruta: "clientes", nombre: "Clientes", icono: HeartHandshake, sub: "Ficha de cada cliente, puntos y promociones por WhatsApp", C: Clientes, permiso: "Clientes" },
   ]],
   ["Catálogo", [
     { ruta: "productos", nombre: "Productos", icono: UtensilsCrossed, sub: "Precios, fotos, recetas y disponibilidad", C: Productos },
