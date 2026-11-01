@@ -4,7 +4,7 @@ import type { NegocioConfig } from "./tipos";
 
 // Valores de respaldo mientras carga (o si todavía no se pegó el schema.sql)
 const RESPALDO: NegocioConfig = {
-  nombre: "ResTO BAR", lema: "El mejor servicio", logo_url: null, whatsapp: null, direccion: null, ciudad: null, nit: null,
+  nombre: "PrestoBar", lema: "El mejor servicio", logo_url: null, whatsapp: null, direccion: null, ciudad: null, nit: null,
   horario: null, hora_abre: "10:00", hora_cierra: "23:30", moneda: "Bs", color: "#12402F", propina_sugerida: 10,
   demora_min: 20, escalado_min: 3, local_abierto: true, envio: [], facturacion_activa: true, facturacion_pruebas: true, comision_qr: 0, intentos_pin: 3, qr_cobro_url: null,
   crm_bs_por_punto: 10, crm_puntos_premio: 100, crm_premio: "Un plato fuerte gratis", crm_dias_riesgo: 30,

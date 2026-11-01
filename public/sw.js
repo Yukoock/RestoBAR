@@ -1,4 +1,4 @@
-// Service worker básico de ResTO BAR (B9).
+// Service worker básico de PrestoBar (B9).
 // Guarda la app (HTML, JS, CSS, íconos) para que Mesero, Cocina, Cajero y Delivery abran sin internet.
 // Los datos de Supabase NUNCA se guardan aquí: siempre se piden a la red.
 const CACHE = "restobar-v1";

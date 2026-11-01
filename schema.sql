@@ -1,5 +1,5 @@
 -- =====================================================================
--- ResTO BAR · Base de datos completa para Supabase
+-- PrestoBar · Base de datos completa para Supabase
 -- Curso «Crea tu Software de Restaurante con IA» · Fase 3
 --
 -- Cómo usarlo: Supabase › SQL Editor › New query › pega TODO este archivo › Run.
@@ -8,7 +8,7 @@
 --
 -- Qué crea: tablas, seguridad por rol (RLS), funciones para la tienda y el QR de
 -- mesa, disparadores (inventario, agotado, totales), tiempo real, buckets de fotos
--- y los datos de ejemplo de ResTO BAR.
+-- y los datos de ejemplo de PrestoBar.
 -- =====================================================================
 
 create extension if not exists pgcrypto with schema extensions;
@@ -1394,15 +1394,17 @@ create policy rb_comprobantes_leer on storage.objects for select to authenticate
   using (bucket_id = 'comprobantes' and (select privado.tiene_rol(array['dueno', 'cajero'])));
 
 -- ---------------------------------------------------------------------
--- 8. Datos de ejemplo de ResTO BAR (de la ficha, parte A)
+-- 8. Datos de ejemplo de PrestoBar (de la ficha, parte A)
 --    No se duplican si vuelves a ejecutar el script.
 -- ---------------------------------------------------------------------
 insert into public.negocio_config (id, nombre, lema, whatsapp, direccion, ciudad, nit, horario, hora_abre, hora_cierra,
   propina_sugerida, demora_min, escalado_min, envio, facturacion_activa, facturacion_pruebas)
-values (1, 'ResTO BAR', 'El mejor servicio', '59170000000', 'Av. Virgen de Luján, al lado del salón Youfer', 'Santa Cruz de la Sierra, Bolivia',
+values (1, 'PrestoBar', 'El mejor servicio', '59170000000', 'Av. Virgen de Luján, al lado del salón Youfer', 'Santa Cruz de la Sierra, Bolivia',
   '1029384756', 'Lunes a domingo 10:00–23:30', '10:00', '23:30', 10, 20, 3,
   '[{"id":"a4","nombre":"Hasta el 4.º anillo","costo":10},{"id":"a6","nombre":"Hasta el 6.º anillo","costo":15}]'::jsonb, true, true)
 on conflict (id) do nothing;
+-- Si tu negocio todavía tiene el nombre anterior de fábrica, pasa a PrestoBar (un nombre propio no se toca)
+update public.negocio_config set nombre = 'PrestoBar' where id = 1 and nombre = 'ResTO BAR';
 
 -- PIN de anulación de ejemplo: 1234 (cámbialo en Configuración › Seguridad)
 insert into privado.secretos (id, pin_anulacion_hash) values (1, extensions.crypt('1234', extensions.gen_salt('bf')))

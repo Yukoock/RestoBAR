@@ -1,4 +1,4 @@
-/** Tokens de la identidad de ResTO BAR (Fase 1). Los colores salen de variables CSS en src/index.css,
+/** Tokens de la identidad de PrestoBar (Fase 1). Los colores salen de variables CSS en src/index.css,
  *  así el modo claro, el oscuro y la cocina usan las mismas clases. */
 /** @type {import('tailwindcss').Config} */
 const v = name => `var(--${name})`;

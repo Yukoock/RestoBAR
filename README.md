@@ -1,6 +1,6 @@
-# ResTO BAR · Sistema del restaurante
+# PrestoBar · Sistema del restaurante
 
-Es el sistema completo de ResTO BAR. Incluye estos módulos:
+Es el sistema completo de PrestoBar. Incluye estos módulos:
 
 - Administración
 - Cajero
@@ -43,7 +43,7 @@ La primera vez toma unos 20 minutos.
 ## Paso 1 · Crear el proyecto en Supabase
 
 1. Entra a **supabase.com**, crea una cuenta y presiona **New project**.
-   - Nombre: el que quieras, por ejemplo `restobar`.
+   - Nombre: el que quieras, por ejemplo `prestobar`.
    - Contraseña de la base de datos: invéntala y guárdala. Para este sistema no se vuelve a usar.
    - Región: la más cercana, por ejemplo **South America (São Paulo)**.
 2. Espera 1 o 2 minutos a que termine de crearse.
@@ -125,7 +125,7 @@ La conexión **no se escribe en el código**. Se escribe como 2 «variables» en
 4. Antes de publicar, en **Environment variables** agrega las 2 variables:
    - `VITE_SUPABASE_URL` → tu Project URL
    - `VITE_SUPABASE_ANON_KEY` → tu anon public key
-5. Presiona **Deploy**. En unos minutos tendrás tu dirección, por ejemplo `https://restobar.netlify.app`.
+5. Presiona **Deploy**. En unos minutos tendrás tu dirección, por ejemplo `https://prestobar.netlify.app`.
 
 > Si agregas o cambias las variables después, ve a **Deploys › Trigger deploy › Deploy site** para que se apliquen.
 

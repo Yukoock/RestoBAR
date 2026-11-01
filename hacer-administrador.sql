@@ -1,5 +1,5 @@
 -- =====================================================================
--- ResTO BAR · Hacer administrador (Dueño) a tu usuario
+-- PrestoBar · Hacer administrador (Dueño) a tu usuario
 --
 -- Úsalo UNA sola vez, después de ejecutar schema.sql:
 --   1. En Supabase › Authentication › Users › Add user › Create new user,

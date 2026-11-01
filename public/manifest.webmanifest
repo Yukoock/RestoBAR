@@ -1,7 +1,7 @@
 {
-  "name": "ResTO BAR",
-  "short_name": "ResTO BAR",
-  "description": "Sistema de ResTO BAR: caja, cocina, mesero, delivery y tienda online.",
+  "name": "PrestoBar",
+  "short_name": "PrestoBar",
+  "description": "Sistema de PrestoBar: caja, cocina, mesero, delivery y tienda online.",
   "lang": "es-BO",
   "start_url": "/",
   "scope": "/",

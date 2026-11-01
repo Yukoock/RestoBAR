@@ -36,11 +36,11 @@ export function LogoIcono({ tamano = 40 }: { tamano?: number }) {
   );
 }
 
-// Nombre del negocio desde la configuración. «ResTO BAR» lleva el «TO» en urucú.
+// Nombre del negocio desde la configuración. «PrestoBar» lleva el «Bar» en urucú.
 export function PalabraLogo({ className, style }: { className?: string; style?: CSSProperties }) {
   const { config } = useConfig();
   const n = config.nombre;
-  const m = n === "ResTO BAR" ? <>Res<span className="text-accent">TO</span> BAR</> : n;
+  const m = n === "PrestoBar" ? <>Presto<span className="text-accent">Bar</span></> : n;
   return <span aria-label={n} style={style} className={cx("whitespace-nowrap font-display text-[22px] font-extrabold tracking-tight", className)}>{m}</span>;
 }
 
