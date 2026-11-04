@@ -1,4 +1,4 @@
-// Créditos de las fotos del menú (Wikimedia Commons, licencias libres). Ver sistema-completo/fotos/CREDITOS.md.
+// Créditos de las fotos del menú (Wikimedia Commons, licencias libres). Ver fotos-del-menu/CREDITOS.md.
 // Si reemplazas una foto por una propia, quita su fila de esta lista.
 export interface CreditoFoto { codigo: string; plato: string; autor: string; licencia: string; licenciaUrl: string; fuente: string }
 export const CREDITOS_FOTOS: CreditoFoto[] = [

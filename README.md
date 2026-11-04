@@ -28,6 +28,28 @@ La primera vez toma unos 20 minutos.
 
 ---
 
+## Cómo entrar al sistema (cuando ya está instalado)
+
+1. Abre **https://prestobar.netlify.app/entrar** (o `https://tu-sitio.netlify.app/entrar` si tu web tiene otro nombre).
+   - También puedes abrir la portada y presionar **Entrar**.
+2. Escribe tu **Correo** y tu **Contraseña** y presiona **Entrar**.
+3. El sistema te lleva solo a tu pantalla, según tu rol:
+
+   | Rol | Pantalla a la que entra |
+   |---|---|
+   | Dueño (administrador) | `/admin` · Administración |
+   | Cajero | `/cajero` |
+   | Cocina | `/cocina` |
+   | Mesero | `/mesero` |
+   | Repartidor | `/delivery` |
+
+- **El Dueño** es el usuario del Paso 3 de abajo, convertido en administrador con `hacer-administrador.sql` (Paso 4).
+- **El equipo** entra con el correo y la contraseña que el Dueño le creó en **Administración › Usuarios y roles**.
+- **¿Olvidaste tu contraseña?** Escribe tu correo y presiona **Olvidé mi contraseña**: te llega un correo para cambiarla. El Dueño también puede cambiársela a cualquiera del equipo desde **Usuarios y roles › Cambiar contraseña**, y la del Dueño se cambia en Supabase › **Authentication › Users**.
+- Si al abrir `/entrar` sale un mensaje rojo en vez del formulario (por ejemplo «Invalid API key»), el problema no es tu usuario: mira **«Si algo no funciona»** al final.
+
+---
+
 ## Qué hay en esta carpeta
 
 | Archivo o carpeta | Para qué sirve |
@@ -102,10 +124,11 @@ En Supabase abre **Project Settings** (la tuerca, abajo a la izquierda) y entra 
 | Dato | Cómo se ve | Variable |
 |---|---|---|
 | **Project URL** | `https://abcd1234.supabase.co` | `VITE_SUPABASE_URL` |
-| **anon public key** | Un texto largo que empieza con `eyJ…` | `VITE_SUPABASE_ANON_KEY` |
+| **Publishable key** (o la **anon public key**) | `sb_publishable_…` (o un texto largo que empieza con `eyJ…`) | `VITE_SUPABASE_ANON_KEY` |
 
-- Si tu panel muestra pestañas, la anon key está en **Legacy API Keys**.
+- Sirve cualquiera de las dos: la **publishable key** de la pestaña **API Keys**, o la **anon key** de la pestaña **Legacy API Keys**.
 - La **Project URL** también aparece en el botón **Connect**, arriba.
+- **Cópiala con el botón de copiar. Nunca la escribas a mano:** una letra **O** y un cero **0** se ven casi iguales, y con una sola letra distinta nadie puede entrar (sale «Invalid API key»).
 
 > ⚠️ Nunca copies la **service_role** ni la **secret key**. Esas claves son secretas y no van en la app.
 
@@ -128,6 +151,10 @@ La conexión **no se escribe en el código**. Se escribe como 2 «variables» en
 5. Presiona **Deploy**. En unos minutos tendrás tu dirección, por ejemplo `https://prestobar.netlify.app`.
 
 > Si agregas o cambias las variables después, ve a **Deploys › Trigger deploy › Deploy site** para que se apliquen.
+
+> **¿Tu sitio ya existía en Netlify (lo subiste arrastrando) y quieres conectarlo a GitHub?** Abre el sitio y ve a **Site configuration › Build & deploy › Continuous deployment › Link repository**, elige GitHub, tu repositorio y la rama `main`. Desde ahí, cada `git push` se publica solo.
+>
+> **Para saber si está conectado:** en **Deploys** cada publicación debe decir «Production: main@…» con el mensaje de tu último cambio. Si solo dice «Manual deploy», no está conectado y `git push` no cambia la web.
 
 ### Opción B · Sin GitHub (con Netlify CLI o arrastrando)
 
@@ -205,6 +232,10 @@ En **Administración › Clientes** está la lista de tus clientes. Se arma **so
 | Lo que ves | Qué hacer |
 |---|---|
 | «Falta conectar Supabase» | Faltan las 2 variables. En Netlify, agrégalas y haz **Trigger deploy**. En tu computadora, revisa el archivo `.env`. |
+| «Invalid API key» al abrir `/entrar` | La clave `VITE_SUPABASE_ANON_KEY` está mal copiada (muchas veces, una **O** escrita como **0**). Vuelve a copiarla con el botón de Supabase (Paso 5), pégala en Netlify › **Environment variables** y haz **Trigger deploy**. En tu computadora, pégala en `.env`. |
+| Hiciste `git push` pero la web sigue igual | Netlify no está conectado a GitHub. Mira el recuadro del Paso 6, Opción A. |
+| La web sigue mostrando el nombre anterior del negocio | En la app, cambia el nombre en **Administración › Configuración**. El nombre de la pestaña y del ícono cambia cuando se publica la versión nueva. |
+| El correo de «Olvidé mi contraseña» abre una página que no carga | En Supabase › **Authentication › URL Configuration**, pon la dirección de tu web en **Site URL** y agrégala en **Redirect URLs**. |
 | «Falta nombrar al Dueño» | Haz los Pasos 3 y 4. |
 | «El correo o la contraseña no coinciden» con tu usuario | Revisa que el correo de `hacer-administrador.sql` sea igual al del Paso 3. Después vuelve a ejecutarlo. |
 | «La base de datos todavía no está lista» | Falta el Paso 2. |

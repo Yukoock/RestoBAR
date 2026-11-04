@@ -1,4 +1,4 @@
-// Tipos de las tablas de Supabase que usa la app (ver fase-3-base-de-datos/schema.sql).
+// Tipos de las tablas de Supabase que usa la app (ver schema.sql).
 export type Rol = "dueno" | "cajero" | "cocina" | "mesero" | "repartidor";
 export type Canal = "mesa" | "qr" | "mostrador" | "llevar" | "delivery" | "web";
 export type EstadoPedido = "borrador" | "cocina" | "preparando" | "listo" | "entregado" | "anulado";
