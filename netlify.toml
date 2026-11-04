@@ -5,6 +5,14 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # Conexión con Supabase. Son datos públicos por diseño (van dentro de la web que ve cualquier visitante);
+  # la seguridad la dan las reglas del schema.sql. Escritos aquí, ganan a lo que haya en el panel de Netlify.
+  # Nunca pongas aquí la service_role ni la secret key.
+  VITE_SUPABASE_URL = "https://gnmqcyedzhrahnwfvwpr.supabase.co"
+  VITE_SUPABASE_ANON_KEY = "sb_publishable_Cqm9gbt5ERiG-4ZOOL-Y_A_Fkzh5hf5"
+  # Netlify detiene la publicación si encuentra estas variables dentro de la web («Secrets scanning»).
+  # Como son públicas, se le indica que no las trate como secretas.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY"
 
 # El service worker y el manifiesto siempre se piden de nuevo, para que las actualizaciones lleguen.
 [[headers]]
